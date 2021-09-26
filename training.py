@@ -9,9 +9,11 @@ def get_data(noise_factor=0.4):
     """
     (X_train, _), (X_test, _) = load_data()
 
+    # normalization
     X_train = X_train/255
     X_test = X_test/255
 
+    # adding random noise
     X_train_noisy = X_train + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=X_train.shape)
     X_test_noisy = X_test + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=X_test.shape)
 
@@ -64,7 +66,7 @@ def plot_history(history):
 
 def plot_results(X_test, X_test_noisy, X_test_encoded, X_test_decoded, num=6):
     """
-    This function plots the test images and the denoised output
+    This function plots the test images, noisy images, encoded images and the denoised output
     """
     for i in range(num):
         plt.subplot(4, num, i + 1)
@@ -103,6 +105,9 @@ if __name__ == '__main__':
     preds = autoencoder.decoder.predict(encoded)
     plot_results(X_test, X_test_noisy, encoded, preds)
     autoencoder.evaluate(X_test_noisy, X_test)
+
+    # model summary
+    autoencoder.summary()
 
     # saving the model
     autoencoder.save_weights('autoencoder_weights.h5')
