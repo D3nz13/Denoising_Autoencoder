@@ -34,9 +34,9 @@ The first row is the clean test data
 The second row is the noisy test data  
 The third row is the encoded noisy test data  
 The last row is the decoded noisy test data  
-- Results for ```noise factor = 0.6```
+- Results for ```noise factor = 0.6```  
 ![Final results for noise factor = 0.6](/graphs/results_0.6.png)  
-- Results for ```noise factor = 0.8```
+- Results for ```noise factor = 0.8```  
 ![Final results for noise factor = 0.8](/graphs/results_0.8.png)  
-- Results for ```noise factor = 1.0```
+- Results for ```noise factor = 1.0```  
 ![Final results for noise factor = 1.0](/graphs/results_1.0.png)  
