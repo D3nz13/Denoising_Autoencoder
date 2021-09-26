@@ -106,8 +106,9 @@ if __name__ == '__main__':
     plot_results(X_test, X_test_noisy, encoded, preds)
     autoencoder.evaluate(X_test_noisy, X_test)
 
-    # model summary
-    autoencoder.summary()
+    # summary
+    autoencoder.encoder.summary()
+    autoencoder.decoder.summary()
 
     # saving the model
     autoencoder.save_weights('autoencoder_weights.h5')
