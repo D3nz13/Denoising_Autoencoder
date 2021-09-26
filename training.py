@@ -86,18 +86,23 @@ def plot_results(X_test, X_test_noisy, X_test_encoded, X_test_decoded, num=6):
     plt.show()
 
 if __name__ == '__main__':
+    # getting the data
     X_train, X_train_noisy, X_test, X_test_noisy = get_data()
     plot_images(X_train, X_train_noisy)
 
+    # building the model
     autoencoder = DenoisingAutoencoder()
     autoencoder.compile(optimizer='adam', loss='mse')
     history = autoencoder.fit(X_train_noisy, X_train, validation_data=(X_test_noisy, X_test), batch_size=128, epochs=5)
     plot_history(history)
 
+    # encoding the X_test_noisy
     encoded = autoencoder.encoder.predict(X_test_noisy).reshape(-1, 7, 7)
 
+    # decoding the encoded data
     preds = autoencoder.decoder.predict(encoded)
     plot_results(X_test, X_test_noisy, encoded, preds)
     autoencoder.evaluate(X_test_noisy, X_test)
 
+    # saving the model
     autoencoder.save_weights('autoencoder_weights.h5')
