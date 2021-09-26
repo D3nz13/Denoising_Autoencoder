@@ -9,6 +9,7 @@
 This project has been made to create my very first autoencoder and to practice.  
 The used dataset is a classic ```MNIST digit dataset```, available in built-in datasets in keras.  
 The dataset contains 28x28 images of digits. I added random noise to each image and tried to reconstruct it by using an autoencoder.  
+The encoded images are 7x7 images.  
 
 ## Used libraries
 ```tensorflow==2.5.0```  
