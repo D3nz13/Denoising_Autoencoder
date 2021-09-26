@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from DenoisingAutoencoder import DenoisingAutoencoder
 from tensorflow.keras.datasets.mnist import load_data
+from DenoisingAutoencoder import DenoisingAutoencoder
 
 def get_data(noise_factor=0.4):
     """
@@ -17,6 +17,12 @@ def get_data(noise_factor=0.4):
 
     X_train_noisy = np.clip(X_train_noisy, 0, 1)
     X_test_noisy = np.clip(X_test_noisy, 0, 1)
+    
+    X_train = X_train.reshape(-1, 28, 28, 1)
+    X_train_noisy = X_train_noisy.reshape(-1, 28, 28, 1)
+
+    X_test = X_test.reshape(-1, 28, 28, 1)
+    X_test_noisy = X_test_noisy.reshape(-1, 28, 28, 1)
 
     return X_train, X_train_noisy, X_test, X_test_noisy
 
@@ -35,3 +41,63 @@ def plot_images(X_train, X_train_noisy, num=6):
         plt.yticks([])
         plt.imshow(X_train_noisy[i], cmap='gray')
     plt.show()
+
+
+def plot_history(history):
+    """
+    This function plots the loss value during the training
+    """
+    plt.subplot(2, 1, 1)
+    plt.plot(history.history['loss'])
+    plt.title('Training loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+
+    plt.subplot(2, 1, 2)
+    plt.plot(history.history['val_loss'])
+    plt.title('Validation loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+
+    plt.show()
+
+
+def plot_results(X_test, X_test_noisy, X_test_encoded, X_test_decoded, num=6):
+    """
+    This function plots the test images and the denoised output
+    """
+    for i in range(num):
+        plt.subplot(4, num, i + 1)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(X_test[i], cmap='gray')
+        plt.subplot(4, num, i + 1 + num)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(X_test_noisy[i], cmap='gray')
+        plt.subplot(4, num, i + 1 + 2*num)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(X_test_encoded[i], cmap='gray')
+        plt.subplot(4, num, i + 1 + 3*num)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(X_test_decoded[i], cmap='gray')
+    plt.show()
+
+if __name__ == '__main__':
+    X_train, X_train_noisy, X_test, X_test_noisy = get_data()
+    plot_images(X_train, X_train_noisy)
+
+    autoencoder = DenoisingAutoencoder()
+    autoencoder.compile(optimizer='adam', loss='mse')
+    history = autoencoder.fit(X_train_noisy, X_train, validation_data=(X_test_noisy, X_test), batch_size=128, epochs=5)
+    plot_history(history)
+
+    encoded = autoencoder.encoder.predict(X_test_noisy).reshape(-1, 7, 7)
+
+    preds = autoencoder.decoder.predict(encoded)
+    plot_results(X_test, X_test_noisy, encoded, preds)
+    autoencoder.evaluate(X_test_noisy, X_test)
+
+    autoencoder.save_weights('autoencoder_weights.h5')
