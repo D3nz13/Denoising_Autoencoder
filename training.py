@@ -89,7 +89,7 @@ def plot_results(X_test, X_test_noisy, X_test_encoded, X_test_decoded, num=6):
 
 if __name__ == '__main__':
     # getting the data
-    X_train, X_train_noisy, X_test, X_test_noisy = get_data()
+    X_train, X_train_noisy, X_test, X_test_noisy = get_data(noise_factor=1)
     plot_images(X_train, X_train_noisy)
 
     # building the model
